@@ -58,7 +58,7 @@
     <script>
         document.getElementById('symptomsForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            
+
             const formData = new FormData(this);
             const formObject = {};
             formData.forEach((value, key) => {
@@ -74,8 +74,14 @@
             })
             .then(response => response.json())
             .then(data => {
-                const analysis = JSON.stringify(data.analise);
-                window.location.href = `analysis.html?analysis=${encodeURIComponent(analysis)}`;
+                // Contar respostas Sim e Não
+                const answers = Object.values(formObject);
+                const countSim = answers.filter(answer => answer === 'Sim').length;
+                const countNao = answers.filter(answer => answer === 'Não').length;
+
+                // Criar a URL com base no resultado
+                const message = countSim > countNao ? 'CUIDADO' : 'SEGURO';
+                window.location.href = `analysis.html?message=${encodeURIComponent(message)}`;
             })
             .catch((error) => {
                 console.error('Error:', error);

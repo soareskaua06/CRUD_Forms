@@ -6,6 +6,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const addButton = document.getElementById('addButton');
     let currentImageId = null;
 
+    document.getElementById('symptomsForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+    
+        const formData = new FormData(this);
+        const formObject = {};
+        formData.forEach((value, key) => {
+            formObject[key] = value;
+        });
+    
+        fetch('http://localhost:3000/api/adicionar-resposta', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formObject)
+        })
+        .then(response => response.json())
+        .then(data => {
+            const resultadoFinal = data.resultadoFinal;
+            window.location.href = `analysis.html?analysis=${encodeURIComponent(resultadoFinal)}`;
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+    
     function addImageToGallery(image) {
         const imageItem = document.createElement('div');
         imageItem.classList.add('image-item');
@@ -13,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const img = document.createElement('img');
         img.src = image.url;
         img.alt = image.titulo;
-        img.dataset.id = image.id;
+        img.dataset.id = image.id;a
 
         img.addEventListener('click', () => {
             openImageModal(image);

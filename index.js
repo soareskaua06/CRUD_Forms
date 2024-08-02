@@ -48,7 +48,19 @@ function analisarRespostas(respostas) {
         possiveisISTs.herpes.porcentagem += 10;
     }
 
-    return possiveisISTs;
+    // Determinar se há risco de IST
+    let resultado = 'negativo';
+    for (const key in possiveisISTs) {
+        if (possiveisISTs[key].porcentagem > 40) {
+            resultado = 'positivo';
+            break;
+        }
+    }
+
+    return {
+        analise: possiveisISTs,
+        resultado: resultado
+    };
 }
 
 app.post('/api/adicionar-resposta', (req, res) => {
@@ -74,7 +86,7 @@ app.post('/api/adicionar-resposta', (req, res) => {
             }
 
             const analise = analisarRespostas(respostas);
-            res.json({ analise });
+            res.json(analise);
         });
     });
 });
